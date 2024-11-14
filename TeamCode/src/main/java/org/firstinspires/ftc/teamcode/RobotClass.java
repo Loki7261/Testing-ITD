@@ -43,7 +43,8 @@ public class RobotClass extends LinearOpMode {
   public DcMotor BRDrive;
   public DcMotor Intake;
   public DcMotor ArmFlipper;
-  public DcMotor Claw;
+  public DcMotor Spinner;
+  public Servo Claw;
 
   public OpenCvCamera camera;
   public String webcamName = "Webcam 1";
@@ -58,8 +59,8 @@ public class RobotClass extends LinearOpMode {
   public double countsPerInch = (TickCounts * gearReduction) / circumference; // gear reduction is < 1 if geared up
 
   public double slideSpeedScalar = 0.5;
-  public double closeClawPos = .45;
-  public double openClawPos = 0.4;
+  public double closeSpinnerPos = .45;
+  public double openSpinnerPos = 0.4;
 
   public boolean isBlueSide = false;
 
@@ -76,16 +77,17 @@ public class RobotClass extends LinearOpMode {
     hwMap = hwMap;
 
     // Define and initialize motors
-    FLDrive = hwMap.get(DcMotor.class, "FLDrive");
-    FRDrive = hwMap.get(DcMotor.class, "FRDrive");
-    BLDrive = hwMap.get(DcMotor.class, "BLDrive");
-    BRDrive = hwMap.get(DcMotor.class, "BRDrive");
-    ArmFlipper = hwMap.get(DcMotor.class, "ArmFlipper");
-    Claw = hwMap.get(DcMotor.class, "Claw");
+    FLDrive = hwMap.get(DcMotor.class, "leftFront");
+    FRDrive = hwMap.get(DcMotor.class, "rightFront");
+    BLDrive = hwMap.get(DcMotor.class, "leftBack");
+    BRDrive = hwMap.get(DcMotor.class, "rightBack");
+    ArmFlipper = hwMap.get(DcMotor.class, "lift");
+    Spinner = hwMap.get(DcMotor.class, "spin");
+    Claw = hwMap.get(Servo.class, "claw");
 
     // Make robot drive straight
     // BRDrive.setDirection(DcMotor.Direction.REVERSE);
-    BLDrive.setDirection(DcMotor.Direction.REVERSE);
+    FLDrive.setDirection(DcMotor.Direction.REVERSE);
     // FLDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
     FLDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -93,20 +95,20 @@ public class RobotClass extends LinearOpMode {
     BLDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     BRDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     ArmFlipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    Claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    Spinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     FLDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     FRDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     BLDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     BRDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    Spinner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     FLDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     BLDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     FRDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     BRDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     ArmFlipper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    Claw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    Spinner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     // ! Computer Vision
     // int cameraMonitorViewId = hwMap.appContext

@@ -29,7 +29,8 @@ public class Omnidrive extends LinearOpMode {
     // true- single button false- trigger
     boolean singleIntakeSelect = false;
     // Season specific variables
-    boolean clawClosed = false;
+    boolean SpinnerClosed = false;
+    double spinnerSpeed = 0.2;
 
     // ! Runs until the end of the match after play is pressed
     waitForStart();
@@ -39,8 +40,8 @@ public class Omnidrive extends LinearOpMode {
       double max;
 
       vertical = gamepad1.left_stick_y;
-      horizontal = -gamepad1.right_stick_x; // for when we actually have omni
-      pivot = -gamepad1.left_stick_x;
+      horizontal = -gamepad1.left_stick_x; // for when we actually have omni
+      pivot = -gamepad1.right_stick_x;
 
       // Speed Changer
       if (gamepad1.right_bumper) {
@@ -54,31 +55,6 @@ public class Omnidrive extends LinearOpMode {
       // Emergency speed mode
       if (gamepad1.dpad_up) {
         speedScalar = 1;
-      }
-
-      // Arm Flipper
-
-      // Raise Slides
-
-      // Airplane Servo
-
-      // if (gamepad2.start) {
-      // robot.ArmFlipper.setTargetPosition(-250);
-      // robot.ArmFlipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-      // singleIntakeSelect = true;
-      // robot.ArmFlipper.setPower(0.2);
-
-      // }
-      // if (gamepad2.back) {
-      // robot.ArmFlipper.setTargetPosition(0);
-      // robot.ArmFlipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-      // singleIntakeSelect = true;
-      // robot.ArmFlipper.setPower(0.2);
-      // }
-
-      if (gamepad2.dpad_left) {
-        robot.ArmFlipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        singleIntakeSelect = false;
       }
 
       double FRPower = ((-pivot + (vertical - horizontal)) * speedScalar);
@@ -101,18 +77,19 @@ public class Omnidrive extends LinearOpMode {
 
       robot.setDrivePower(FLPower, FRPower, BLPower, BRPower);
 
-      robot.ArmFlipper.setPower(gamepad1.right_stick_y * 0.1);
-      robot.Claw.setPower((gamepad1.right_trigger - gamepad1.left_trigger) * 0.1);
-
-      // // ? Servo position measurer
-      // if (gamepad2.x) {
-      // robot.PixelClaw.setPosition(robot.PixelClaw.getPosition() + 0.0001);
-      // } else if (gamepad2.y) {
-      // robot.PixelClaw.setPosition(robot.PixelClaw.getPosition() - 0.0001);
-      // }
-      // telemetry.addData("Servo Pos", robot.PixelClaw.getPosition());
-
-      // Telemetry
+      robot.ArmFlipper.setPower(gamepad2.right_stick_x);
+      robot.Spinner.setPower((gamepad2.left_stick_y) * spinnerSpeed);
+      if (gamepad2.x) {
+        robot.Claw.setPosition(0.0);
+      } else if (gamepad2.b) {
+        robot.Claw.setPosition(1.0);
+      }
+      if (gamepad2.a) {
+        spinnerSpeed = .1;
+      }
+      if (gamepad2.y) {
+        spinnerSpeed = 0.4;
+      }
     }
   }
 }
